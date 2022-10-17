@@ -1,0 +1,52 @@
+package main
+
+import (
+	"fmt"
+	"sort"
+	"strings"
+	"strconv"
+)
+
+func main() {
+	input := "aaaaaabbbbbяяяяппппaaaaccccc"
+	fmt.Println(input)
+	output := collapseString(input)
+	fmt.Println("Output: ", output)
+}
+
+func collapseString(input string) string{
+  runes := []rune(input)
+  sort.Sort(sortRuneString(runes))
+  
+  var str []string
+  key := &runes[0]
+  count := 0;
+  for i, ch := range runes {
+  		if i == len(runes)-1 {
+		  str = append(str, string(*key), strconv.Itoa(count+1))
+		  return strings.Join(str,"")
+		}
+  		if ch != *key {
+			str = append(str, string(*key), strconv.Itoa(count))
+			count = 1
+			key = &runes[i]
+		} else {
+			count++
+		}
+	}
+	return strings.Join(str,"")
+}
+
+type sortRuneString []rune
+
+func (s sortRuneString) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s sortRuneString) Less(i, j int) bool {
+	return s[i] < s[j]
+}
+
+func (s sortRuneString) Len() int {
+	return len(s)
+}
